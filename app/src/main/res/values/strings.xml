@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">SimWear</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+
+    <string name="start_scan">开始扫描</string>
+    <string name="gps">GPS</string>
+    <string name="gprs">GPRS</string>
+    <string name="heartpage">心电图</string>
+    <string name="dead_heartrate">60</string>
+    <string name="dead_temperature">36.7</string>
+    <string name="temperature_unit">°C</string>
+    <string name="heart_unit">次/分钟</string>
+</resources>

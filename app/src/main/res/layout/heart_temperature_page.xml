@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/heart_page"
+    android:background="@color/white"
+    tools:context="com.nju.simwear.pages.HeartTemperaturePage">
+
+    <RelativeLayout
+        android:id="@+id/heart_rate_temperature_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="30dp"
+        android:layout_marginStart="60dp"
+        android:layout_centerHorizontal="true">
+
+        <RelativeLayout
+            android:id="@+id/temperature_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp">
+            <ImageView
+                android:id="@+id/themometer_icon"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:src="@drawable/themometer_icon"/>
+
+            <TextView
+                android:id="@+id/dead_tempreature"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="@string/dead_temperature"
+                android:textSize="40sp"
+                android:textColor="#000000"
+                android:layout_centerHorizontal="true"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="@string/temperature_unit"
+                android:textSize="20sp"
+                android:textColor="#888888"
+                android:layout_alignParentEnd="true"
+                />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/heart_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/temperature_layout">
+
+            <ImageView
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:src="@drawable/heart_icon"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="@string/dead_heartrate"
+                android:textSize="40sp"
+                android:textColor="#000000"
+                android:layout_centerHorizontal="true"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="@string/heart_unit"
+                android:textSize="20sp"
+                android:textColor="#888888"
+                android:layout_alignParentEnd="true"
+                />
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+    <com.nju.simwear.views.CardiographView
+        android:layout_width="match_parent"
+        android:layout_height="275dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:layout_below="@id/heart_rate_temperature_layout"/>
+
+    <com.nju.simwear.views.PathView
+        android:layout_width="match_parent"
+        android:layout_height="275dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:layout_below="@id/heart_rate_temperature_layout"/>
+</RelativeLayout>
