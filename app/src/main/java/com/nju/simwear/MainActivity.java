@@ -3,6 +3,8 @@ package com.nju.simwear;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.NavigationView;
@@ -19,26 +21,49 @@ import android.widget.Toast;
 
 import com.baidu.mapapi.SDKInitializer;
 import com.baidu.mapapi.map.MapView;
-import com.nju.simwear.models.DataUpdateUtils;
+import com.nju.simwear.Utils.DataUpdateUtils;
 import com.nju.simwear.pages.TheFragmentPagerAdapter;
 import com.nju.simwear.views.CustomViewPager;
+
+import java.lang.ref.WeakReference;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
     private TabLayout tabLayout;
     private CustomViewPager viewPager;
     private TheFragmentPagerAdapter theFragmentPagerAdapter;
+    private static boolean updateStarted = false;
+
+    private static class DataUpdateHandler extends Handler{
+        private WeakReference<MainActivity> weakReference;
+
+        public DataUpdateHandler(MainActivity mainActivity){
+            weakReference = new WeakReference<MainActivity>(mainActivity);
+        }
+
+        @Override
+        public void handleMessage(Message message){
+            final MainActivity mainActivity = weakReference.get();
+            if(message.obj != null) {
+                mainActivity.showText(message.obj.toString());
+            } else {
+                Bundle bundle = message.getData();
+                mainActivity.setTemperature(bundle.getString("temperature"));
+                mainActivity.setHeartRate(bundle.getString("heartRate"));
+            }
+        }
+    }
 
     private void initFragment(){
         //使用适配器将ViewPager与Fragment绑定在一起
-        viewPager= (CustomViewPager) findViewById(R.id.viewPager);
+        viewPager= findViewById(R.id.viewPager);
         theFragmentPagerAdapter = new TheFragmentPagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(theFragmentPagerAdapter);
         viewPager.setPagingEnabled(false);
 
 
         //将TabLayout与ViewPager绑定在一起
-        tabLayout = (TabLayout) findViewById(R.id.tabLayout);
+        tabLayout = findViewById(R.id.tabLayout);
         tabLayout.setupWithViewPager(viewPager);
 
         TextView tv1 = (TextView)(((LinearLayout)((LinearLayout)tabLayout.getChildAt(0)).getChildAt(0)).getChildAt(1));
@@ -48,21 +73,43 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void initDraw(){
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
     }
 
     private void initMap(){
         SDKInitializer.initialize(getApplicationContext());
+    }
+
+    private void startUpdate(){
+        if(!updateStarted) {
+            DataUpdateHandler dataUpdateHandler = new DataUpdateHandler(this);
+            DataUpdateUtils.startUpdateInfo(dataUpdateHandler);
+            updateStarted = true;
+        }
+    }
+
+    public void showText(String text){
+        Toast.makeText(this, text, Toast.LENGTH_LONG).show();
+    }
+
+    public void setTemperature(String temperature){
+        TextView temperatureTextView = findViewById(R.id.tempreature_text);
+        temperatureTextView.setText(temperature);
+    }
+
+    public void setHeartRate(String heartRate){
+        TextView heartRateTextView = findViewById(R.id.heart_rate_text);
+        heartRateTextView.setText(heartRate);
     }
 
     @Override
@@ -78,7 +125,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     //返回键操作
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -96,8 +143,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public void onWindowFocusChanged(boolean hasFocus){
         super.onWindowFocusChanged(hasFocus);
-        MapView mapView = (MapView)findViewById(R.id.baidu_map);
+        MapView mapView = findViewById(R.id.baidu_map);
+
         DataUpdateUtils.setMapLocation(mapView, 32.12, 118.9658);
+
+        startUpdate();
     }
 
     @Override

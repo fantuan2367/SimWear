@@ -28,7 +28,7 @@
                 android:src="@drawable/themometer_icon"/>
 
             <TextView
-                android:id="@+id/dead_tempreature"
+                android:id="@+id/tempreature_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
@@ -61,6 +61,7 @@
                 android:src="@drawable/heart_icon"/>
 
             <TextView
+                android:id="@+id/heart_rate_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
